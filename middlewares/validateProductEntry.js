@@ -42,6 +42,7 @@ const validateProductEntry = async (req, res, next) => {
       is: true,
       then: joi.number().required(),
     }),
+    isOfferUpadted: joi.boolean().allow(),
   });
 
   const { error: validationError } = validationSchema.validate(formattedData);
@@ -53,20 +54,20 @@ const validateProductEntry = async (req, res, next) => {
 
   const startdate = new Date(
     formattedData.start_date + " " + formattedData.start_time
-  ).getTime();
+  ).getTime()+(1*60*1000);
   const endDate = new Date(
     formattedData.end_date + " " + formattedData.end_time
   ).getTime();
   const todate = new Date().getTime(); // today
-
-  if (startdate < todate || endDate < startdate || endDate < todate) {
-    const error = new Error("invalid offer date format");
-    error.statusCode = 400;
-    return next(error);
+  const isOfferUpadted = formattedData.isOfferUpadted;
+  if (isOfferUpadted) {
+    if (startdate < todate || endDate < startdate || endDate < todate) {
+      const error = new Error("invalid offer date format");
+      error.statusCode = 400;
+      return next(error);
+    }
   }
-
   next();
-
 };
 
 module.exports = validateProductEntry;

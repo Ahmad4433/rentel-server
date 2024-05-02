@@ -4,18 +4,27 @@ const productRoutes = require("./routes/admin/products");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
 const getConnection = require("./utils/getConnection");
-const productCategoryRoutes = require('./routes/admin/productCategory')
-const productBrandRoutes = require('./routes/admin/productBrand')
+const productCategoryRoutes = require("./routes/admin/productCategory");
+const productBrandRoutes = require("./routes/admin/productBrand");
+const uploadProductImageRoutes = require("./routes/admin/uploadImage");
+
+// client side routes
+const getClientFilteredProductList = require("./routes/client/products");
 const app = express();
-getConnection()
+getConnection();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.get((req, res, next) => {
+  res.send("server is running");
+});
 app.use("/admin/product", productRoutes);
+app.use("/admin/product/image", uploadProductImageRoutes);
+app.use("/admin/product/category", productCategoryRoutes);
+app.use("/admin/product/brand", productBrandRoutes);
 
-app.use('/admin/product/category',productCategoryRoutes)
-app.use('/admin/product/brand',productBrandRoutes)
+// client side apis
+app.use("/client/product", getClientFilteredProductList);
 
 app.use(errorHandler);
 
