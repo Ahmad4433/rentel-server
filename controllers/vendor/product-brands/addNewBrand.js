@@ -1,4 +1,4 @@
-const ProductBrand = require('../../../models/ProductBrand')
+const ProductBrand = require("../../../models/ProductBrand");
 const {
   checkImageMime,
   checkImageSize,
@@ -20,7 +20,7 @@ const addNewBrand = async (req, res, next) => {
     if (findedBrand) {
       const error = new Error("this brand is already exist");
       error.statusCode = 400;
-      throw error
+      throw error;
     }
 
     checkImageMime(req.files);
@@ -32,13 +32,11 @@ const addNewBrand = async (req, res, next) => {
     });
     await newBrand.save();
 
-    res
-      .status(201)
-      .json({ message: "brand added successfully", status: true });
-    unlinkFile(req.files);
+    res.status(201).json({ message: "brand added successfully", status: true });
+    // unlinkFile(req.files);
   } catch (error) {
     next(error);
-    unlinkFile(req.files);
+    // unlinkFile(req.files);
   }
 };
 module.exports = addNewBrand;

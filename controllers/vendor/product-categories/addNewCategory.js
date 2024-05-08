@@ -20,11 +20,12 @@ const addNewCategory = async (req, res, next) => {
     if (findedCategory) {
       const error = new Error("this category is already exist");
       error.statusCode = 400;
-      throw error
+      throw error;
     }
 
     checkImageMime(req.files);
     checkImageSize(req.files);
+
     const result = await cloudinaryConfig(req.files);
     const newCategory = new ProductCategory({
       name: name,
@@ -35,10 +36,10 @@ const addNewCategory = async (req, res, next) => {
     res
       .status(201)
       .json({ message: "category added successfully", status: true });
-    unlinkFile(req.files);
+    // unlinkFile(req.files);
   } catch (error) {
     next(error);
-    unlinkFile(req.files);
+    // unlinkFile(req.files);
   }
 };
 module.exports = addNewCategory;
