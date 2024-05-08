@@ -7,7 +7,8 @@ const getConnection = require("./utils/getConnection");
 const productCategoryRoutes = require("./routes/admin/productCategory");
 const productBrandRoutes = require("./routes/admin/productBrand");
 const uploadProductImageRoutes = require("./routes/admin/uploadImage");
-
+const userAccountRoutes = require("./routes/client/account");
+const cartRouter = require('./routes/user/cart')
 // client side routes
 const getClientFilteredProductList = require("./routes/client/products");
 const app = express();
@@ -22,10 +23,10 @@ app.use("/admin/product", productRoutes);
 app.use("/admin/product/image", uploadProductImageRoutes);
 app.use("/admin/product/category", productCategoryRoutes);
 app.use("/admin/product/brand", productBrandRoutes);
-
+app.use('/item/add',cartRouter)
 // client side apis
 app.use("/client/product", getClientFilteredProductList);
-
+app.use("/user", userAccountRoutes);
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () =>
