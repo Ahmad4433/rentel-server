@@ -34,10 +34,10 @@ const updateProduct = async (req, res, next) => {
     res
       .status(200)
       .json({ message: "product updated successfully", status: true });
-    unlinkFile(req.files);
+    // unlinkFile(req.files);
   } catch (error) {
     next(error);
-    unlinkFile(req.files);
+    // unlinkFile(req.files);
   }
 };
 
