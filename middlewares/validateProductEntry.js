@@ -2,7 +2,7 @@ const joi = require("joi");
 
 const validateProductEntry = async (req, res, next) => {
   const { data } = req.body;
-  const formattedData = JSON.parse(data);
+  // const formattedData = JSON.parse(data);
   const validationSchema = joi.object({
     name: joi.string().min(1).required(),
     sale_price: joi.number().min(1).required(),
@@ -13,6 +13,14 @@ const validateProductEntry = async (req, res, next) => {
     description: joi.string().required(),
     has_offer: joi.boolean().required(),
     service_type: joi.string().required(),
+    fileCode: joi.array().allow(),
+    year: joi.number().required(),
+    model: joi.string().required(),
+    stock: joi.when("service_type", {
+      is: "sell",
+      then: joi.number().required(),
+    }),
+    reservedDates: joi.array().allow(),
     questions: joi
       .array()
       .items(
@@ -24,20 +32,13 @@ const validateProductEntry = async (req, res, next) => {
       .required(),
     start_date: joi.when("has_offer", {
       is: true,
-      then: joi.string().required(),
+      then: joi.number().required(),
     }),
     end_date: joi.when("has_offer", {
       is: true,
-      then: joi.string().required(),
+      then: joi.number().required(),
     }),
-    start_time: joi.when("has_offer", {
-      is: true,
-      then: joi.string().required(),
-    }),
-    end_time: joi.when("has_offer", {
-      is: true,
-      then: joi.string().required(),
-    }),
+
     percentage: joi.when("has_offer", {
       is: true,
       then: joi.number().required(),
@@ -45,28 +46,30 @@ const validateProductEntry = async (req, res, next) => {
     isOfferUpadted: joi.boolean().allow(),
   });
 
-  const { error: validationError } = validationSchema.validate(formattedData);
+  const { error: validationError } = validationSchema.validate(data);
   if (validationError) {
     const error = new Error(validationError.message);
     error.statusCode = 400;
     return next(error);
   }
 
-  const startdate = new Date(
-    formattedData.start_date + " " + formattedData.start_time
-  ).getTime()+(1*60*1000);
-  const endDate = new Date(
-    formattedData.end_date + " " + formattedData.end_time
-  ).getTime();
-  const todate = new Date().getTime(); // today
-  const isOfferUpadted = formattedData.isOfferUpadted;
-  if (isOfferUpadted) {
-    if (startdate < todate || endDate < startdate || endDate < todate) {
-      const error = new Error("invalid offer date format");
-      error.statusCode = 400;
-      return next(error);
-    }
-  }
+  // const startdate =
+  //   new Date(
+  //     formattedData.start_date + " " + formattedData.start_time
+  //   ).getTime() +
+  //   1 * 60 * 1000;
+  // const endDate = new Date(
+  //   formattedData.end_date + " " + formattedData.end_time
+  // ).getTime();
+  // const todate = new Date().getTime(); // today
+  // const isOfferUpadted = formattedData.isOfferUpadted;
+  // if (isOfferUpadted) {
+  //   if (startdate < todate || endDate < startdate || endDate < todate) {
+  //     const error = new Error("invalid offer date format");
+  //     error.statusCode = 400;
+  //     return next(error);
+  //   }
+  // }
   next();
 };
 

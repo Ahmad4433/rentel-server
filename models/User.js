@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const registerSchema = new mongoose.Schema(
   {
-    mobile:
-     { type: String },
+    mobile: { type: String },
     name: {
       type: String,
     },

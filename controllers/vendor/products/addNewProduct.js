@@ -5,48 +5,53 @@ const {
   unlinkFile,
 } = require("../../../utils/index");
 const Product = require("../../../models/Product");
+const Galary = require("../../../models/Galary");
 const ProductCategory = require("../../../models/ProductCategory");
 const ProductBrand = require("../../../models/ProductBrand");
 const addNewProduct = async (req, res, next) => {
   const { data } = req.body;
-  const formatedData = JSON.parse(data);
 
   try {
-  const findedCategory = await ProductCategory.findOne({
-    name: formatedData.category,
-  });
- 
-  if (!findedCategory) {
-    const error = new Error("the provided category is not exist");
-    error.statusCode = 400;
-    throw error;
-  }
+    const findedCategory = await ProductCategory.findOne({
+      name: data.category,
+    });
 
-  const findedBrand = await ProductBrand.findOne({ name: formatedData.brand });
-  if (!findedBrand) {
-    const error = new Error("the provided brand is not exsit");
-    error.statusCode = 400;
-    throw error;
-  }
+    if (!findedCategory) {
+      const error = new Error("the provided category is not exist");
+      error.statusCode = 400;
+      throw error;
+    }
 
-  checkImageMime(req.files);
-  checkImageSize(req.files);
-  const result = await cloudinaryConfig(req.files);
+    const findedBrand = await ProductBrand.findOne({
+      name: data.brand,
+    });
+    if (!findedBrand) {
+      const error = new Error("the provided brand is not exsit");
+      error.statusCode = 400;
+      throw error;
+    }
 
-  const newProduct = new Product({
-    data: JSON.parse(data),
-    image: result.map((item) => item.secure_url),
-  });
-  const savedProduct = await newProduct.save();
-  findedBrand.product.push(savedProduct._id);
-  findedCategory.product.push(savedProduct._id)
-  await findedBrand.save()
-  await findedCategory.save()
+    const newProduct = new Product({
+      data: data,
+      image: data.fileCode,
+    });
 
-  res
-    .status(200)
-    .json({ message: "new product created successfully", status: true });
-  // unlinkFile(req.files);
+    const savedProduct = await newProduct.save();
+    findedBrand.product.push(savedProduct._id);
+    findedCategory.product.push(savedProduct._id);
+    await findedBrand.save();
+    await findedCategory.save();
+    await Promise.all(
+      data.fileCode.map(async (item) => {
+        const findedGalary = await Galary.findById(item);
+        findedGalary.product = savedProduct._id;
+        await findedGalary.save();
+      })
+    );
+    res
+      .status(200)
+      .json({ message: "new product created successfully", status: true });
+    // unlinkFile(req.files);
   } catch (error) {
     next(error);
   }

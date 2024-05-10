@@ -1,12 +1,17 @@
 const Product = require("../../../models/Product");
 const calculateValidity = require("../../../utils/calculateOfferValidity");
 const getProductByFilter = async (req, res, next) => {
-  const page = req.query.page;
+  const page = req.query.page || 1;
   const limit = 25;
   const { filter } = req.body;
 
   try {
-    const findedProducts = await Product.find(filter ? filter : null)
+    const findedProducts = await Product.find(filter)
+      .populate([
+        {
+          path: "image",
+        },
+      ])
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ _id: -1 });
@@ -15,19 +20,17 @@ const getProductByFilter = async (req, res, next) => {
       const { isOfferValid, discountAmount, offerEndDate, offerPrice } =
         calculateValidity(item?.data);
 
-        return {
-            ...item._doc,
-            isOfferValid: isOfferValid,
-            discountAmount: discountAmount,
-            offerEndDate: offerEndDate,
-            offerPrice: offerPrice,
-            isNew: Date.now() - new Date(item.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000
-        };
-        
+      return {
+        ...item._doc,
+        isOffer_valid: isOfferValid,
+        discountAmount: discountAmount,
+        offerEndDate: offerEndDate,
+        offerPrice: offerPrice,
+        isNew:
+          Date.now() - new Date(item.createdAt).getTime() <=
+          7 * 24 * 60 * 60 * 1000,
+      };
     });
-
-    
-
 
     res
       .status(200)

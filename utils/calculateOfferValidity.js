@@ -1,11 +1,6 @@
 const calculateOffervalidity = (product) => {
-  const offerStartDate = new Date(
-    product.start_date + " " + product.start_time
-  ).getTime();
-
-  const offerEndDate = new Date(
-    product.end_date + " " + product.end_time
-  ).getTime();
+  const offerStartDate = product.start_date;
+  const offerEndDate = product.end_date;
   const currentTime = new Date().getTime();
 
   const isOfferValid =
@@ -14,7 +9,7 @@ const calculateOffervalidity = (product) => {
     const offerPercentage = parseFloat(product.percentage);
     const salePrice = parseFloat(product.sale_price);
     const discountAmount = parseFloat(salePrice * offerPercentage) / 100;
-    const offerPrice = parseFloat(salePrice - discountAmount);
+    const offerPrice = parseFloat(salePrice - discountAmount).toFixed(2);
     return { offerPrice, discountAmount, isOfferValid, offerEndDate };
   } else {
     return { isOfferValid };

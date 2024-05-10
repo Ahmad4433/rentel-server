@@ -3,20 +3,23 @@ const loginUser = async (req, res, next) => {
   const { mobile } = req.body;
 
   try {
-    // const isUserExist = await User.findOne({ mobile: mobile });
+    const isUserExist = await User.findOne({ mobile: mobile });
 
-    const newUser = new User({
-          mobile: mobile,
-        });
-        await newUser.save();
-        res.status(200).json({ message: "success", status: true });
+    if (!isUserExist) {
+      const newUser = new User({
+        mobile: mobile,
+      });
+      const savedUser = await newUser.save();
+      res
+        .status(200)
+        .json({ message: "success", status: true, userId: savedUser._id });
 
-    // if (!isUserExist) {
-    //  
-    //   return
-    // } else {
-    //   res.status(200).json({ message: "success", status: true });
-    // }
+      return;
+    } else {
+      res
+        .status(200)
+        .json({ message: true, message: "success", userId: isUserExist._id });
+    }
   } catch (error) {
     next(error);
   }

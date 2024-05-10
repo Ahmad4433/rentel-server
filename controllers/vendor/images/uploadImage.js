@@ -1,9 +1,8 @@
-const Image = require("../../../models/Images");
+const Galary = require("../../../models/Galary");
 const {
   checkImageSize,
   checkImageMime,
   cloudinaryConfig,
-  unlinkFile,
 } = require("../../../utils/index");
 const uploadImage = async (req, res, next) => {
   try {
@@ -11,17 +10,18 @@ const uploadImage = async (req, res, next) => {
     checkImageSize(req.files);
     const result = await cloudinaryConfig(req.files);
 
-    const newImages = new Image({
-      imane: result.map((item) => item.secure_url),
+    const newImages = new Galary({
+      image: result.map((item) => item.secure_url),
     });
     const savedImages = await newImages.save();
-    res
-      .status(200)
-      .json({ message: "images upload successfully", id: savedImages._id });
-    unlinkFile(req.files);
+    res.status(200).json({
+      message: "images upload successfully",
+      id: savedImages._id,
+      status: true,
+      url: result[0].secure_url,
+    });
   } catch (error) {
     next(error);
-    unlinkFile(req.files);
   }
 };
 

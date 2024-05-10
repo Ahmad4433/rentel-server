@@ -7,13 +7,7 @@ const getProductList = require("../../controllers/vendor/products/getProductList
 const updateProduct = require("../../controllers/vendor/products/updateProduct");
 const router = express.Router();
 
-router.post(
-  "/add",
-  uploadFile(),
-  checkImagePresent,
-  validateProductEntry,
-  addNewProduct
-);
+router.post("/add", validateProductEntry, addNewProduct);
 router.get("/get/list", getProductList);
-router.put("/update", uploadFile(), validateProductEntry,updateProduct);
+router.put("/update", uploadFile(), validateProductEntry, updateProduct);
 module.exports = router;

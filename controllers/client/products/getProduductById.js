@@ -3,9 +3,13 @@ const getProductById = async (req, res, next) => {
   const checkOfferValidity = require("../../../utils/calculateOfferValidity");
   const productId = req.query.id;
   try {
-    const findedProduct = await Product.findById(productId).select(
-      "-user -brand -category"
-    );
+    const findedProduct = await Product.findById(productId)
+      .select("-user -brand -category")
+      .populate([
+        {
+          path: "image",
+        },
+      ]);
 
     const { isOfferValid, discountAmount, offerEndDate, offerPrice } =
       checkOfferValidity(findedProduct.data);

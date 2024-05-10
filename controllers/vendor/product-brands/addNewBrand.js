@@ -3,7 +3,6 @@ const {
   checkImageMime,
   checkImageSize,
   cloudinaryConfig,
-  unlinkFile,
 } = require("../../../utils/index");
 const joi = require("joi");
 const addNewBrand = async (req, res, next) => {
