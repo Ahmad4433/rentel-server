@@ -1,21 +1,18 @@
-const User = require("../../../models/User");
+const Order = require("../../../models/Order");
 const Cart = require("../../../models/Cart");
-const Product = require("../../../models/Product");
+const User = require("../../../models/User");
 const checkOfferValidity = require("../../../utils/calculateOfferValidity");
-const getCart = async (req, res, next) => {
-  const userId = req.query.userId;
 
+const placeOrder = async (req, res, next) => {
+  const { userId, address } = req.body;
   try {
-
-
-    
-
     const findedUser = await User.findById(userId);
     if (!findedUser) {
       const error = new Error("no user found");
       error.statusCode = 400;
       throw error;
     }
+
     const findedCart = await Cart.find({ user: userId }).populate([
       {
         path: "product",
@@ -56,12 +53,27 @@ const getCart = async (req, res, next) => {
       return (accu += parseFloat(cur.total));
     }, 0);
 
-    res.status(200).json({
-      message: "success",
-      status: true,
-      list,
-      grandTotal,
+    const newOrder = new Order({
+      user: userId,
+      order_detail: list,
+      address: { ...address },
+      grandTotal: grandTotal,
     });
-  } catch (error) {}
+
+    const savedOrder = await newOrder.save();
+    findedUser.order.push(savedOrder._id);
+    findedUser.address = address;
+    await findedUser.save();
+    await Cart.updateMany({ user: userId }, { user: null });
+
+    res.status(200).json({
+      message: "order placed successfully",
+      status: true,
+      order: savedOrder,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-module.exports = getCart;
+
+module.exports = placeOrder;

@@ -18,7 +18,12 @@ const loginUser = async (req, res, next) => {
     } else {
       res
         .status(200)
-        .json({ message: true, message: "success", userId: isUserExist._id });
+        .json({
+          message: true,
+          message: "success",
+          userId: isUserExist._id,
+          address: isUserExist.address,
+        });
     }
   } catch (error) {
     next(error);

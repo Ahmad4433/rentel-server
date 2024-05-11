@@ -12,7 +12,9 @@ const registerSchema = new mongoose.Schema(
       type: String,
       default: "customer",
     },
+    address: { type: Object },
     active: { type: Boolean, default: true },
+    order: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
   },
   { timeseries: true }
 );
