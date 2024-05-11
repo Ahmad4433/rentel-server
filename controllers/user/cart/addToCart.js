@@ -21,14 +21,17 @@ const addToCart = async (req, res, next) => {
     if (findedCart) {
       findedCart.quantity += 1;
       findedCart.total_amount += isOfferValid
-        ? offerPrice
-        : findedProduct?.data?.sale_price;
+        ? parseFloat(offerPrice)
+        : parseFloat(findedProduct?.data?.sale_price);
       await findedCart.save();
     } else {
       const newCart = new Cart({
         product: productId,
         quantity: 1,
-        total_amount: isOfferValid ? offerPrice : findedProduct?.data?.sale_price,
+        total_amount: isOfferValid
+          ? offerPrice
+          : findedProduct?.data?.sale_price,
+        user: findedUser._id,
       });
       await newCart.save();
     }

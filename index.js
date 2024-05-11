@@ -23,7 +23,7 @@ app.use("/admin/product", productRoutes);
 app.use("/admin/product/image", uploadProductImageRoutes);
 app.use("/admin/product/category", productCategoryRoutes);
 app.use("/admin/product/brand", productBrandRoutes);
-app.use('/item/add',cartRouter)
+app.use('/item',cartRouter)
 // client side apis
 app.use("/client/product", getClientFilteredProductList);
 app.use("/user", userAccountRoutes);
