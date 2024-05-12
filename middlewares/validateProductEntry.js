@@ -2,6 +2,9 @@ const joi = require("joi");
 
 const validateProductEntry = async (req, res, next) => {
   const { data } = req.body;
+
+
+
   // const formattedData = JSON.parse(data);
   const validationSchema = joi.object({
     name: joi.string().min(1).required(),

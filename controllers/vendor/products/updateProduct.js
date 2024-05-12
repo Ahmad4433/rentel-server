@@ -1,16 +1,17 @@
 const Product = require("../../../models/Product");
-const {
-  checkImageMime,
-  cloudinaryConfig,
-  checkImageSize,
-  unlinkFile,
-} = require("../../../utils/index");
+// const {
+//   checkImageMime,
+//   cloudinaryConfig,
+//   checkImageSize,
+//   unlinkFile,
+// } = require("../../../utils/index");
 const updateProduct = async (req, res, next) => {
   const { data } = req.body;
-  const formatedData = JSON.parse(data);
+
+  const formatedData = data;
   const productId = req.query.id;
 
-  try {
+    try {
     const findedProduct = await Product.findById(productId);
     if (!findedProduct) {
       const error = new Error("no product found");
@@ -18,18 +19,16 @@ const updateProduct = async (req, res, next) => {
       throw error;
     }
 
-    let files;
-    if (req.files?.length>0) {
-      checkImageMime(req.files);
-      checkImageSize(req.files);
-      files = await cloudinaryConfig(req.files);
-    }
+    // let files;
+    // if (req.files?.length>0) {
+    //   checkImageMime(req.files);
+    //   checkImageSize(req.files);
+    //   files = await cloudinaryConfig(req.files);
+    // }
 
     findedProduct.data = formatedData;
-    findedProduct.image =
-      req.files?.length > 0
-        ? files.map((file) => file.secure_url)
-        : findedProduct.image.map((item) => item);
+    findedProduct.image = formatedData.fileCode;
+
     await findedProduct.save();
     res
       .status(200)
