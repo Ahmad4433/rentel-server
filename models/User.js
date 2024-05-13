@@ -1,13 +1,7 @@
 const mongoose = require("mongoose");
 const registerSchema = new mongoose.Schema(
   {
-    mobile: { type: String },
-    name: {
-      type: String,
-    },
-    email: {
-      type: String,
-    },
+    user: { type: Object },
     role: {
       type: String,
       default: "customer",

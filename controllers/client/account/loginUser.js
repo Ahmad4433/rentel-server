@@ -1,13 +1,13 @@
 const User = require("../../../models/User");
 const loginUser = async (req, res, next) => {
-  const { mobile } = req.body;
+  const { user } = req.body;
 
   try {
-    const isUserExist = await User.findOne({ mobile: mobile });
+    const isUserExist = await User.findOne({ "user.mobile": user.mobile });
 
     if (!isUserExist) {
       const newUser = new User({
-        mobile: mobile,
+        user: user,
       });
       const savedUser = await newUser.save();
       res
@@ -16,14 +16,12 @@ const loginUser = async (req, res, next) => {
 
       return;
     } else {
-      res
-        .status(200)
-        .json({
-          message: true,
-          message: "success",
-          userId: isUserExist._id,
-          address: isUserExist.address,
-        });
+      res.status(200).json({
+        message: true,
+        message: "success",
+        userId: isUserExist._id,
+        address: isUserExist.address,
+      });
     }
   } catch (error) {
     next(error);
