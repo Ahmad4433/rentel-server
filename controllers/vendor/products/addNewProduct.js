@@ -4,12 +4,14 @@ const {
   cloudinaryConfig,
   unlinkFile,
 } = require("../../../utils/index");
+const User = require("../../../models/User");
 const Product = require("../../../models/Product");
 const Galary = require("../../../models/Galary");
 const ProductCategory = require("../../../models/ProductCategory");
 const ProductBrand = require("../../../models/ProductBrand");
 const addNewProduct = async (req, res, next) => {
   const { data } = req.body;
+  const userId = req.userId;
 
   try {
     const findedCategory = await ProductCategory.findOne({
@@ -34,6 +36,7 @@ const addNewProduct = async (req, res, next) => {
     const newProduct = new Product({
       data: data,
       image: data.fileCode,
+      vendor: userId,
     });
 
     const savedProduct = await newProduct.save();
@@ -48,6 +51,11 @@ const addNewProduct = async (req, res, next) => {
         await findedGalary.save();
       })
     );
+
+    const findedUser = await User.findById(userId);
+    findedUser.products.nonAtomicPush(savedProduct._id);
+    await findedUser.save();
+
     res
       .status(200)
       .json({ message: "new product created successfully", status: true });

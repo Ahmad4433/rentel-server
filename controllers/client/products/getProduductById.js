@@ -4,12 +4,15 @@ const getProductById = async (req, res, next) => {
   const productId = req.query.id;
   try {
     const findedProduct = await Product.findById(productId)
-      .select("-user -brand -category")
+      .select(" -brand -category")
       .populate([
         {
           path: "image",
         },
       ]);
+
+
+     
 
     const { isOfferValid, discountAmount, offerEndDate, offerPrice } =
       checkOfferValidity(findedProduct.data);

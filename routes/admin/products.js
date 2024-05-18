@@ -6,10 +6,11 @@ const checkImagePresent = require("../../utils/checkImagePresent");
 const getProductList = require("../../controllers/vendor/products/getProductList");
 const updateProduct = require("../../controllers/vendor/products/updateProduct");
 const deleteProduct = require("../../controllers/vendor/products/deleteProduct");
+const isAuth = require("../../middlewares/isAuth");
 const router = express.Router();
 
-router.post("/add", validateProductEntry, addNewProduct);
-router.get("/get/list", getProductList);
-router.put("/update",  validateProductEntry, updateProduct);
+router.post("/add", isAuth, validateProductEntry, addNewProduct);
+router.get("/get/list", isAuth, getProductList);
+router.put("/update", validateProductEntry, updateProduct);
 router.delete("/delete", deleteProduct);
 module.exports = router;

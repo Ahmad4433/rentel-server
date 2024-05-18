@@ -2,13 +2,18 @@ const mongoose = require("mongoose");
 const registerSchema = new mongoose.Schema(
   {
     user: { type: Object },
+    email: { type: String },
+    name: { type: String },
+    password: { type: String },
+    mobile: { type: String },
     role: {
       type: String,
       default: "customer",
     },
     address: { type: Object },
-    active: { type: Boolean, default: true },
+    active: { type: String, default: "active" },
     order: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
+    products: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   },
   { timeseries: true }
 );

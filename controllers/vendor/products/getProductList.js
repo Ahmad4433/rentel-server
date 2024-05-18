@@ -2,10 +2,12 @@ const Product = require("../../../models/Product");
 const checkOfferValidity = require("../../../utils/calculateOfferValidity");
 const Galary = require("../../../models/Galary");
 const getProductList = async (req, res, next) => {
+  const userId = req.userId;
+
   const page = req.query.page;
   const pageLimit = 10;
   try {
-    const list = await Product.find()
+    const list = await Product.find({ vendor: userId })
       .populate([
         {
           path: "image",
@@ -14,6 +16,7 @@ const getProductList = async (req, res, next) => {
       .sort({ _id: -1 })
       .skip((page - 1) * pageLimit)
       .limit(pageLimit);
+
     const formatedList = list.map((item) => {
       const { isOfferValid, discountAmount, offerPrice, offerEndDate } =
         checkOfferValidity(item.data);

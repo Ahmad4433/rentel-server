@@ -44,6 +44,7 @@ const placeOrder = async (req, res, next) => {
                 ? parseFloat(offerPrice * item.quantity)
                 : parseFloat(pro.data.sale_price * item.quantity),
               discount: discountAmount,
+              vendorId: pro.vendor.toString(),                                                                                                     
             };
           })
           .flat();
