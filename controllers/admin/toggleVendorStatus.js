@@ -8,7 +8,9 @@ const toggleVendorStatus = async (req, res, next) => {
     findedVendor.active = status;
     await findedVendor.save();
 
-    res.status(200).json({ message: "success", status: true });
+    res
+      .status(200)
+      .json({ message: "status updated successfully", status: true });
   } catch (error) {
     next(error);
   }

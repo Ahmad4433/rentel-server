@@ -15,7 +15,7 @@ const registerSchema = new mongoose.Schema(
     order: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
     products: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   },
-  { timeseries: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("User", registerSchema);

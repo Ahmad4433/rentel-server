@@ -5,11 +5,11 @@ const orderList = async (req, res, next) => {
   try {
     let adminOrderList;
     if (role === "admin") {
-      adminOrderList = await Order.find();
+      adminOrderList = await Order.find().sort({_id:-1});
     }
     const findedList = await Order.find({
       "order_detail.vendorId": userId,
-    });
+    }).sort({ _id: -1 });
 
     const newObje = findedList.map((item) => {
       return {
