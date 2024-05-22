@@ -1,6 +1,7 @@
 const User = require("../../../models/User");
 const getSingleCustomer = async (req, res, next) => {
   const userId = req.query.id;
+  console.log(userId)
   try {
     const findedUser = await User.findById(userId)
       .select("-product")

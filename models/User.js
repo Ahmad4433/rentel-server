@@ -10,6 +10,7 @@ const registerSchema = new mongoose.Schema(
       type: String,
       default: "customer",
     },
+    profile: { type: String },
     address: { type: Object },
     active: { type: String, default: "active" },
     order: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
