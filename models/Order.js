@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
     address: { type: Object },
     grandTotal: { type: Number },
     status: { type: String, default: "pending" },
+    cancel_reason:{type:String}
   },
   { timestamps: true }
 );

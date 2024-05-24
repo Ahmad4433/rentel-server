@@ -1,18 +1,22 @@
 const Product = require("../../../models/Product");
+const Review = require("../../../models/Review");
 const getProductById = async (req, res, next) => {
   const checkOfferValidity = require("../../../utils/calculateOfferValidity");
   const productId = req.query.id;
   try {
-    const findedProduct = await Product.findById(productId)
-      .select(" -brand -category")
-      .populate([
-        {
-          path: "image",
+    const findedProduct = await Product.findById(productId).populate([
+      {
+        path: "image",
+      },
+      {
+        path: "review",
+        select: "-product",
+        populate: {
+          path: "user",
+          select: "address.firstName address.lastName profile",
         },
-      ]);
-
-
-     
+      },
+    ]);
 
     const { isOfferValid, discountAmount, offerEndDate, offerPrice } =
       checkOfferValidity(findedProduct.data);

@@ -10,7 +10,7 @@ const uploadProductImageRoutes = require("./routes/admin/uploadImage");
 const userAccountRoutes = require("./routes/client/account");
 const cartRouter = require("./routes/user/cart");
 const orderRoutes = require("./routes/user/order");
-
+const productReviewRoutes = require("./routes/user/addProductReview");
 // super admin
 const venderListRoute = require("./routes/admin/vendorList");
 const vendorAccountRoutes = require("./routes/admin/login");
@@ -38,7 +38,7 @@ app.use("/item", cartRouter);
 app.use("/client/product", getClientFilteredProductList);
 app.use("/user", userAccountRoutes);
 app.use("/user/order", orderRoutes);
-
+app.use("/product/review", productReviewRoutes);
 // super admin
 app.use("/admin/vendor", venderListRoute);
 app.use("/vendor", vendorAccountRoutes);
